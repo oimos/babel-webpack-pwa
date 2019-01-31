@@ -3,11 +3,11 @@ const HtmlWebpackPlugin = require('html-webpack-plugin');
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 const CopyWebpackPlugin = require('copy-webpack-plugin');
 const prefixer = require('autoprefixer');
-const workboxPlugin = require('workbox-webpack-plugin');
+const { GenerateSW } = require('workbox-webpack-plugin');
 
 module.exports = {
   entry: {
-    app: './src/js/index',
+    app: './src/assets/js/index',
   },
   output: {
     path: `${__dirname}/dist`,
@@ -28,7 +28,8 @@ module.exports = {
         test: /\.scss$/,
         use: [
           {
-            loader: process.env.NODE_ENV !== 'production' ? 'style-loader' : MiniCssExtractPlugin.loader,
+            // loader: process.env.NODE_ENV !== 'production' ? 'style-loader' : MiniCssExtractPlugin.loader,
+            loader: MiniCssExtractPlugin.loader,
           },
           {
             loader: 'css-loader',
@@ -67,14 +68,13 @@ module.exports = {
   },
 
   plugins: [
-    // new VueLoaderPlugin(),
     new HtmlWebpackPlugin({
       filename: path.resolve(__dirname, './dist/index.html'),
-      template: 'ejs-compiled-loader!./src/template/index.ejs',
+      template: 'ejs-compiled-loader!./src/index.ejs',
     }),
 
     new CopyWebpackPlugin([{
-      from: './src/images/**/*',
+      from: './src/assets/images/**/*',
       to: './assets/images',
       flatten: true,
     }]),
@@ -83,33 +83,69 @@ module.exports = {
       filename: './assets/css/[name].bundle.css',
     }),
 
-    new workboxPlugin.GenerateSW({
+    new GenerateSW({
+      cacheId: 'cache-v1',
       swDest: 'sw.js',
       importWorkboxFrom: 'local',
       clientsClaim: true,
       skipWaiting: true,
-      // include: [/\.css$/, /\.js$/],
-      // exclude: [/\.html$/],
-      // runtimeCaching: [{
-      //   urlPattern: '',
-      //   handler: 'networkFirst',
-      //   options: {
-      //     networkTimeoutSeconds: 10,
-      //     cacheName: 'file-cache',
-      //   }
-      // }],
+      exclude: [/\.map$/, /^manifest.*\.js(?:on)?$/, /\.html$/],
+      runtimeCaching: [
+        {
+          urlPattern: /\.(png|svg|woff|ttf|eot)/,
+          handler: "staleWhileRevalidate",
+          options: {
+            expiration: {
+              maxAgeSeconds: 60 * 60 * 24,
+              maxEntries: 20
+            },
+            cacheName: "images",
+            cacheableResponse: {
+                statuses: [0, 200]
+            }
+          },
+        },
+        {
+          urlPattern: /\.(css)/,
+          handler: "staleWhileRevalidate",
+          options: {
+            expiration: {
+              maxAgeSeconds: 60 * 60 * 24,
+              maxEntries: 20
+            },
+            cacheName: "css",
+            cacheableResponse: {
+                statuses: [0, 200]
+            }
+          },
+        },
+        {
+          urlPattern: /\.(js)/,
+          handler: "staleWhileRevalidate",
+          options: {
+            expiration: {
+              maxAgeSeconds: 60 * 60 * 24,
+              maxEntries: 20
+            },
+            cacheName: "js",
+            cacheableResponse: {
+                statuses: [0, 200]
+            }
+          },
+        }
+      ],
     })
   ],
 
   devServer: {
     contentBase: path.join(__dirname, 'dist'),
     compress: true,
-    port: 5432,
+    port: 1234,
     historyApiFallback: true,
   },
 
   resolve: {
-    modules: [path.join(__dirname, 'src'), 'node_modules'],
+    modules: [path.join(__dirname, 'src/assets'), 'node_modules'],
     extensions: ['.js', '.scss', '.css'],
   },
 };
