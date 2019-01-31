@@ -1,0 +1,35 @@
+{
+  "extends": [
+    "eslint-config-airbnb-base"
+  ],
+  "rules": {
+    "func-names": 0,
+    "object-shorthand": 0,
+    "no-new": 0,
+    "import/no-unresolved": 0,
+    "no-console": 0,
+    "no-param-reassign": 0,
+    "no-undef": 0,
+    "max-len": 0,
+    "semi": 0,
+    "function-paren-newline": 0,
+    "comma-dangle": 0,
+    "import/no-named-as-default": 0,
+    "import/no-named-as-default-member": 0,
+    "eol-last": 0,
+    "vue/html-self-closing": 0,
+    "vue/html-indent": 0,
+    "vue/max-attributes-per-line": 0,
+    "vue/mustache-interpolation-spacing": 0,
+    "no-multiple-empty-lines": 0,
+    "vue/order-in-components": 0,
+    "vue/no-multi-spaces": 0,
+    "vue/attributes-order": 0,
+    "no-unused-vars": 0,
+    "space-before-function-paren": 0,
+    "space-before-blocks": 0
+  },
+  "parserOptions": {
+    "ecmaVersion": 2015
+  }
+}
