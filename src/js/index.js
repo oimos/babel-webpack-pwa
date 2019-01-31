@@ -1,3 +1,7 @@
 import '../scss/app.scss';
 
-console.log('hello')
+if ('serviceWorker' in window.navigator) {
+  window.addEventListener('load', () => {
+    navigator.serviceWorker.register('/sw.js');
+  });
+}

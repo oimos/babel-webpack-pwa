@@ -3,6 +3,7 @@ const HtmlWebpackPlugin = require('html-webpack-plugin');
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 const CopyWebpackPlugin = require('copy-webpack-plugin');
 const prefixer = require('autoprefixer');
+const workboxPlugin = require('workbox-webpack-plugin');
 
 module.exports = {
   entry: {
@@ -81,10 +82,27 @@ module.exports = {
     new MiniCssExtractPlugin({
       filename: './assets/css/[name].bundle.css',
     }),
+
+    new workboxPlugin.GenerateSW({
+      swDest: 'sw.js',
+      importWorkboxFrom: 'local',
+      clientsClaim: true,
+      skipWaiting: true,
+      // include: [/\.css$/, /\.js$/],
+      // exclude: [/\.html$/],
+      // runtimeCaching: [{
+      //   urlPattern: '',
+      //   handler: 'networkFirst',
+      //   options: {
+      //     networkTimeoutSeconds: 10,
+      //     cacheName: 'file-cache',
+      //   }
+      // }],
+    })
   ],
 
   devServer: {
-    contentBase: path.join(__dirname, 'dist/sp'),
+    contentBase: path.join(__dirname, 'dist'),
     compress: true,
     port: 5432,
     historyApiFallback: true,

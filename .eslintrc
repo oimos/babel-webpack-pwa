@@ -27,7 +27,11 @@
     "vue/attributes-order": 0,
     "no-unused-vars": 0,
     "space-before-function-paren": 0,
-    "space-before-blocks": 0
+    "space-before-blocks": 0,
+    "quotes": 0,
+    "no-underscore-dangle": 0,
+    "no-restricted-globals": 0,
+    "quote-props": 0
   },
   "parserOptions": {
     "ecmaVersion": 2015
