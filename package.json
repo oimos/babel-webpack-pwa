@@ -4,8 +4,8 @@
   "main": "index.js",
   "license": "MIT",
   "scripts": {
-    "lint:js": "eslint src/js/*.js",
-    "lint:css": "stylelint src/scss/**/*.scss",
+    "lint:js": "eslint src/assets/js/*.js",
+    "lint:css": "stylelint src/assets/scss/**/*.scss",
     "lint": "run-s lint:js lint:css",
     "build:server": "webpack-dev-server",
     "build:dev": "webpack --mode development -w",

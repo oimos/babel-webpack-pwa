@@ -5,6 +5,11 @@ const CopyWebpackPlugin = require('copy-webpack-plugin');
 const prefixer = require('autoprefixer');
 const { GenerateSW } = require('workbox-webpack-plugin');
 
+//variable
+const distDir = path.join(process.cwd(), 'dist');
+const swPath = path.join(distDir, 'sw.js');
+const cacheId = 'my-cache-id';
+
 module.exports = {
   entry: {
     app: './src/assets/js/index',
@@ -84,52 +89,53 @@ module.exports = {
     }),
 
     new GenerateSW({
-      cacheId: 'cache-v1',
-      swDest: 'sw.js',
+      cacheId: cacheId,
+      swDest: swPath,
       importWorkboxFrom: 'local',
       clientsClaim: true,
       skipWaiting: true,
-      exclude: [/\.map$/, /^manifest.*\.js(?:on)?$/, /\.html$/],
+      globDirectory: './dist/',
+      globPatterns: [],
       runtimeCaching: [
         {
-          urlPattern: /\.(png|svg|woff|ttf|eot)/,
+          urlPattern: /.+\.(png|gif|jpg|jpeg|svg|webp)$/,
           handler: "staleWhileRevalidate",
           options: {
             expiration: {
-              maxAgeSeconds: 60 * 60 * 24,
+              maxAgeSeconds: 60 * 60 * 24 * 30,
               maxEntries: 20
             },
-            cacheName: "images",
+            cacheName: `${cacheId}-image-cache`,
             cacheableResponse: {
-                statuses: [0, 200]
+              statuses: [0, 200]
             }
           },
         },
         {
-          urlPattern: /\.(css)/,
+          urlPattern: /.+\.(js|css|woff)$/,
           handler: "staleWhileRevalidate",
           options: {
             expiration: {
-              maxAgeSeconds: 60 * 60 * 24,
-              maxEntries: 20
+              maxAgeSeconds: 60 * 60 * 24 * 30,
+              maxEntries: 50
             },
-            cacheName: "css",
+            cacheName: `${cacheId}-dependent-cache`,
             cacheableResponse: {
-                statuses: [0, 200]
+              statuses: [0, 200]
             }
           },
         },
         {
-          urlPattern: /\.(js)/,
+          urlPattern: /.+(\/|.html)$/,
           handler: "staleWhileRevalidate",
           options: {
             expiration: {
-              maxAgeSeconds: 60 * 60 * 24,
+              maxAgeSeconds: 60 * 60 * 24 * 7,
               maxEntries: 20
             },
-            cacheName: "js",
+            cacheName: `${cacheId}-html-cache`,
             cacheableResponse: {
-                statuses: [0, 200]
+              statuses: [0, 200]
             }
           },
         }
